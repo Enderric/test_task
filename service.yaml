@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service # для доступа к нашему deployment 
+metadata:  
+  labels:
+    app: web                                                                                                                                                            
+    developer: vflyashovskij
+  name: web-application
+  namespace: mindbox-testing
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: web                                                                                                                                                            
+    developer: vflyashovskij
+  type: ClusterIP # Параметр ClusterIP означает, что будет использоваться виртуальная сеть кластера. Доступ к сервису будет доступен только внутри кластера. Извне доступ закрыт.
+

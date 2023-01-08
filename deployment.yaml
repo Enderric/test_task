@@ -1,0 +1,40 @@
+# Многозонный кластер повысит доступность нашего приложения, запустив его на 5 узлах в 3 зонах. 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-application
+  namespace: mindbox-testing
+spec:
+  selector:
+    matchLabels:
+      app: web                                                                                                                                                              
+      developer: vflyashovskij
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web                                                                                                                                                              
+        developer: vflyashovskij
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          command: [nginx]
+          args: ['-g', 'daemon off;']               
+          ports:                               
+          - containerPort: 80 
+          resources:
+            limits:
+              cpu: 300m # назначим контейнеру дополнительные ресурсы, чтобы приложение успешно справлялось с первыми запросами
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80         
+            periodSeconds: 5  # нашему приложению, требуется дополнительное время запуска для инициализации
+            failureThreshold: 3  # теперь у приложения будет максимум 15 секунд для завершения запуска
+
+
